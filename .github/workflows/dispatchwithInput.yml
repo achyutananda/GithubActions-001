@@ -29,7 +29,7 @@ on:
         default: 'Release Notes.'
         required: true
 env:
-  JAVA_VERSION: 17
+  JAVA_VERSION: '17'
   
 jobs:
   lint:
