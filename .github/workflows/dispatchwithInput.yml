@@ -2,10 +2,6 @@ name: Dispatch with Input
 on: 
   workflow_dispatch:
     inputs:
-      branch:
-        default: 'develop'
-        description: 'Select branch'
-        required: true
       build_type:
         default: 'uat'
         description: 'Sect build type: uat, prod'
@@ -39,11 +35,9 @@ jobs:
     steps:
       - name: check out
         uses: actions/checkout@v4
-        with:
-          ref: ${{inputs.branch}}
       - name: Print Lint
         run: |
-          echo Branch : ${{inputs.branch}}
+          echo Branch : ${{github.ref_name}}
           echo Build type : ${{inputs.build_type}}
           echo Version : ${{inputs.version}}
           echo Lint : ${{inputs.lint}}
@@ -54,7 +48,7 @@ jobs:
     steps:
       - name: Print Lint
         run: |
-          echo Branch : ${{inputs.branch}}
+          echo Branch : ${{github.ref_name}}
           echo Build type : ${{inputs.build_type}}
           echo Version : ${{inputs.version}}
           echo Test : ${{inputs.test}}
@@ -65,7 +59,7 @@ jobs:
     steps:
       - name: Print Lint
         run: |
-          echo Branch : ${{inputs.branch}}
+          echo Branch : ${{github.ref_name}}
           echo Build type : ${{inputs.build_type}}
           echo Version : ${{inputs.version}}
           echo Test : ${{inputs.build}}
