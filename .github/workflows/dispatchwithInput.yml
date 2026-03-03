@@ -123,6 +123,7 @@ jobs:
         uses: wzieba/Firebase-Distribution-Github-Action@v1.7.1
         with:
           appId: ${{secrets.ACTIONS_001_FIREBASE_APP_ID}}
+          serviceCredentialsFileContent: ${{ secrets.FIREBASE_CREDENTIAL_FILE_CONTENT }}
           file: apk/app-debug-${{inputs.build_type}}-${{inputs.version}}.apk
           releaseNotes: |
             Debug build -- qa internal only
