@@ -35,8 +35,10 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
-    if: ${{inputs.lint=='true'}}
+    if: ${{inputs.lint == true}}
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Print Lint
         run: |
           echo Branch : ${{inputs.branch}}
@@ -46,7 +48,7 @@ jobs:
           echo Release Notes : ${{inputs.release_notes}}
   test:
     runs-on: ubuntu-latest
-    if: ${{inputs.lint=='true'}}
+    if: ${{inputs.test=='true'}}
     steps:
       - name: Print Lint
         run: |
@@ -57,7 +59,7 @@ jobs:
           echo Release Notes : ${{inputs.release_notes}}
   build:
     runs-on: ubuntu-latest
-    if: ${{inputs.lint=='true'}}
+    if: ${{inputs.build=='true'}}
     steps:
       - name: Print Lint
         run: |
