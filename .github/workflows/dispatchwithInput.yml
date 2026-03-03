@@ -2,10 +2,6 @@ name: Dispatch with Input
 on: 
   workflow_dispatch:
     inputs:
-      branch:
-        default: 'develop'
-        description: 'Select branch'
-        required: true
       build_type:
         default: 'uat'
         description: 'Sect build type: uat, prod'
@@ -32,6 +28,9 @@ on:
       release_notes:
         default: 'Release Notes.'
         required: true
+env:
+  JAVA_VERSION: 17
+  
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -40,10 +39,26 @@ jobs:
       - name: check out
         uses: actions/checkout@v4
         with:
-          ref: ${{inputs.branch}}
+          ref: ${{github.ref_name}}
+      - name: Java setup
+        uses: actions/java-setup@v4
+        with:
+          java-version: ${{env.JAVA_VERSION}}
+          distribution: temurin
+          cache: gradle
+      - name: Permission execute gradle
+        run: chmod +x gradle
+      - name: Lint
+        run: ./gradlew lintDebug
+      - name: Upload Lint Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: list-report
+          path: app/build/reports/lint-results-*.html
+          retaintion-days: 7
       - name: Print Lint
         run: |
-          echo Branch : ${{inputs.branch}}
+          echo Branch : ${{github.ref_name}}
           echo Build type : ${{inputs.build_type}}
           echo Version : ${{inputs.version}}
           echo Lint : ${{inputs.lint}}
@@ -51,23 +66,67 @@ jobs:
   test:
     runs-on: ubuntu-latest
     if: ${{inputs.test == true}}
+    needs: lint
     steps:
-      - name: Print Lint
-        run: |
-          echo Branch : ${{inputs.branch}}
-          echo Build type : ${{inputs.build_type}}
-          echo Version : ${{inputs.version}}
-          echo Test : ${{inputs.test}}
-          echo Release Notes : ${{inputs.release_notes}}
-  build:
+      - name: check out
+        uses: actions/checkout@v4
+      - name: Java setup
+        uses: actions/java-setup@v4
+        with:
+          java-version: ${{env.JAVA_VERSION}}
+          distribution: temurin
+          cache: gradle
+      - name: Permission execute gradle
+        run: chmod +x gradle
+      - name: Test
+        run: ./gradlew testDebugUnitTest
+      - name: Upload Test Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: app/build/reports/tests/
+          retaintion-days: 7
+  build-debug:
     runs-on: ubuntu-latest
-    if: ${{inputs.build == true }}
+    if: ${{inputs.build == true && inputs.build_type == 'uat'}}
+    needs: [test]
     steps:
-      - name: Print Lint
+      - name: Checkoutout
+        uses: actions/checkout@v4
+      - name: Java Setup
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{env.JAVA_VERSION}}
+          distribution: temurin
+          cache: gradle
+      - name: Permission gradle
+        run: chmod +x gradlew
+      - name: Build apk
+        run: ./assembleDebug
+      - name: Upload apk
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug
+          path: app/build/outputs/apk/debug/app-debug.apk
+          retentions: 7
+  build-prod:
+    runs-on: ubuntu-latest
+    if: ${{ inputs.build==true && inputs.build_type=='prod' }}
+    needs: [lint,test]
+    steps:
+      - name: Following step to deploy to prod
         run: |
-          echo Branch : ${{inputs.branch}}
-          echo Build type : ${{inputs.build_type}}
-          echo Version : ${{inputs.version}}
-          echo Test : ${{inputs.build}}
-          echo Release Notes : ${{inputs.release_notes}}
+          echo checkout code -> set up java -> gradle permission -> decode upload key from base 64 and store in app/release.keystore with below command: 
+          -> run: | 
+              echo "$KEYSTORE_BASE64" | base64 --decode > app/release.keystore
+          -> run: |
+              ./gradlew assembleRelease
+              -Pandroid.injected.signing.store.file = $GITHUB_WORKSPACE/app/release.keystore \
+              -Pandroid.injected.signing.store.password = $STORE_PASSWORD \
+              -Pandroid.injected.signing.key.alias = $KEY_ALIAS \
+              -Pandroid.injected.signing.key.password = $KEY_PASSWORD \
+              -- stacktrace
+      - name: Upload to production
+        run: echo upload to prod 
+  
   
