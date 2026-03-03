@@ -1,0 +1,69 @@
+name: Dispatch with Input
+on: 
+  workflow_dispatch:
+    inputs:
+      branch:
+        default: 'develop'
+        description: 'Select branch'
+        required: true
+      build_type:
+        default: 'uat'
+        description: 'Sect build type: uat, prod'
+        required: true
+      version:
+        default: '1.0'
+        description: 'Input version'
+        required: true
+      lint:
+        default: true
+        type: boolean
+        description: 'Enable lint'
+        required: false
+      test:
+        default: true
+        type: boolean
+        description: 'Enable test'
+        required: false
+      build:
+        default: true
+        type: boolean
+        description: 'Enable build'
+        required: false
+      release_notes:
+        default: 'Release Notes.'
+        required: true
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    if: ${{inputs.lint=='true'}}
+    steps:
+      - name: Print Lint
+        run: |
+          echo Branch : ${{inputs.branch}}
+          echo Build type : ${{inputs.build_type}}
+          echo Version : ${{inputs.version}}
+          echo Lint : ${{inputs.lint}}
+          echo Release Notes : ${{inputs.release_notes}}
+  test:
+    runs-on: ubuntu-latest
+    if: ${{inputs.lint=='true'}}
+    steps:
+      - name: Print Lint
+        run: |
+          echo Branch : ${{inputs.branch}}
+          echo Build type : ${{inputs.build_type}}
+          echo Version : ${{inputs.version}}
+          echo Test : ${{inputs.test}}
+          echo Release Notes : ${{inputs.release_notes}}
+  build:
+    runs-on: ubuntu-latest
+    if: ${{inputs.lint=='true'}}
+    steps:
+      - name: Print Lint
+        run: |
+          echo Branch : ${{inputs.branch}}
+          echo Build type : ${{inputs.build_type}}
+          echo Version : ${{inputs.version}}
+          echo Test : ${{inputs.build}}
+          echo Release Notes : ${{inputs.release_notes}}
+  
