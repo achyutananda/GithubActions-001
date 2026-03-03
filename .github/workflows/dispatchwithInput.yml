@@ -122,7 +122,7 @@ jobs:
       - name: Firebase app distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1.7.1
         with:
-          appId: ${{secrets.FIREBASE_APP_ID}}
+          appId: ${{secrets.ACTIONS_001_FIREBASE_APP_ID}}
           file: apk/app-debug-${{inputs.build_type}}-${{inputs.version}}.apk
           
   build-prod:
