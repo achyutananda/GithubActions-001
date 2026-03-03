@@ -114,6 +114,10 @@ jobs:
     needs: build-debug
     if: ${{inputs.build==true && inputs.build_type=='uat'}}
     steps:
+      - name: Printing value from uat env value
+        run: |
+          echo uat env variable ${{vars.MY_UAT_VARIABLE}}
+          echo uat env secrets ${{secrets.MY_UAT_SECRET}}
       - name: Download app
         uses: actions/download-artifact@v4
         with:
@@ -139,7 +143,12 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ inputs.build==true && inputs.build_type=='prod' }}
     needs: [lint,test]
+    environment: prod
     steps:
+      - name: Check env variable
+        run: |
+          echo prod env variable ${{vars.MY_PROD_VARIABLE}}
+          echo prod env secrets ${{secrets.MY_PROD_SECRET}}
       - name: Following step to deploy to prod
         run: |
           echo checkout code -> set up java -> gradle permission -> decode upload key from base 64 and store in app/release.keystore with below command: 
