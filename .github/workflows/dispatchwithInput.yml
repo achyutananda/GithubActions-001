@@ -37,6 +37,10 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{inputs.lint == true}}
     steps:
+      - name: check out
+        uses: actions/checkout@v4
+        with:
+          ref: ${{inputs.branch}}
       - name: Print Lint
         run: |
           echo Branch : ${{inputs.branch}}
