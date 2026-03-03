@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -9,6 +11,11 @@ android {
     compileSdk {
         version = release(36)
     }
+    val localProperties = Properties().apply {
+        val file = rootProject.file("local.properties")
+        if (file.exists())
+            load(file.inputStream())
+    }
 
     defaultConfig {
         applicationId = "com.slab.githubactions_001"
@@ -18,6 +25,14 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        val apiKey = System.getenv("API_KEY")?: localProperties["API_KEY"]?:"API Key Not Set"
+        val baseUrl = System.getenv("BASE_URL")?: localProperties["BASE_URL"]?:"Base URL Not Set"
+        buildConfigField(
+            type = "String",
+            name = "API_KEY",
+            value = "\"${apiKey}\""
+        )
+        buildConfigField("String","BASE_URL","\"${baseUrl}\"")
     }
 
     buildTypes {
@@ -38,7 +53,40 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
+//    flavorDimensions += listOf("env", "tier")
+//    productFlavors {
+//        create("uat") {
+//            dimension = "env"
+//            applicationIdSuffix = ".uat"
+//            versionNameSuffix = "-uat"
+//        }
+//        create("prod") {
+//            dimension = "env"
+//            applicationIdSuffix = ".prod"
+//            versionNameSuffix = "-prod"
+//        }
+//        create("free") {
+//            dimension = "tier"
+//            applicationIdSuffix = ".free"
+//            versionNameSuffix = "-free"
+//        }
+//        create("premium") {
+//            dimension = "tier"
+//            applicationIdSuffix = ".premium"
+//            versionNameSuffix = "-premium"
+//        }
+//    }
+//    androidComponents {
+//        beforeVariants { variantBuilder ->
+//            if (variantBuilder.productFlavors.any {
+//                    it.second == "uat" && variantBuilder.buildType == "release"
+//                }) {
+//                variantBuilder.enable = false
+//            }
+//        }
+//    }
 }
 
 dependencies {
