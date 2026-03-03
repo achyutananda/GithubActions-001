@@ -124,6 +124,13 @@ jobs:
         with:
           appId: ${{secrets.ACTIONS_001_FIREBASE_APP_ID}}
           file: apk/app-debug-${{inputs.build_type}}-${{inputs.version}}.apk
+          releaseNotes: |
+            Debug build -- qa internal only
+            Version: ${{inputs.version}}
+            Build: ${{github.run_number}}
+            Branch: ${{github.ref_name}}
+            Commit: ${{github.sha}}
+            
           
   build-prod:
     runs-on: ubuntu-latest
