@@ -137,6 +137,7 @@ jobs:
             Build: ${{github.run_number}}
             Branch: ${{github.ref_name}}
             Commit: ${{github.sha}}
+            Release Notes: ${{inputs.release_notes}}
             
           
   build-prod:
