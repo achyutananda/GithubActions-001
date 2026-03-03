@@ -119,6 +119,8 @@ jobs:
         with:
           name: app-debug-${{inputs.build_type}}-${{inputs.version}}
           path: apk/
+      - name: Print downloaded file name
+        run: find ./apk -type f
       - name: Firebase app distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1.7.1
         with:
