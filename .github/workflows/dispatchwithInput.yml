@@ -53,7 +53,7 @@ jobs:
       - name: Upload Lint Report
         uses: actions/upload-artifact@v4
         with:
-          name: list-report
+          name: lint-report
           path: app/build/reports/lint-results-*.html
           retaintion-days: 7
       - name: Print Lint
@@ -102,7 +102,7 @@ jobs:
       - name: Permission gradle
         run: chmod +x gradlew
       - name: Build apk
-        run: ./assembleDebug
+        run: ./gradlew assembleDebug
       - name: Upload apk
         uses: actions/upload-artifact@v4
         with:
