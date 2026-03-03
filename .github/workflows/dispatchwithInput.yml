@@ -151,7 +151,7 @@ jobs:
           echo prod env secrets ${{secrets.MY_PROD_SECRET}}
       - name: Following step to deploy to prod
         run: |
-          echo checkout code -> set up java -> gradle permission -> decode upload key from base 64 and store in app/release.keystore with below command: 
+          echo 'checkout code -> set up java -> gradle permission -> decode upload key from base 64 and store in app/release.keystore with below command: 
           -> run: | 
               echo "$KEYSTORE_BASE64" | base64 --decode > app/release.keystore
           -> run: |
@@ -160,7 +160,7 @@ jobs:
               -Pandroid.injected.signing.store.password = $STORE_PASSWORD \
               -Pandroid.injected.signing.key.alias = $KEY_ALIAS \
               -Pandroid.injected.signing.key.password = $KEY_PASSWORD \
-              -- stacktrace
+              -- stacktrace'
       - name: Upload to production
         run: echo upload to prod 
   
