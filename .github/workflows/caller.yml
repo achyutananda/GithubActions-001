@@ -4,7 +4,7 @@ on:
   workflow_dispatch: 
 jobs:
   call-reusable:
-    uses: './.github/workflows/reusable.yml'  # path to reusable workflow
+    uses: ./.github/workflows/reusable.yml  # path to reusable workflow
     with:
       input1: 'production'
     secrets:
