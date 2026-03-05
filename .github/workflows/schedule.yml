@@ -1,7 +1,17 @@
 name: schedule
 on: 
+  workflow_dispatch:
+    inputs:
+      data:
+        description: 'enter value'
+        type: choice
+        required: true
+        options:
+          - A
+          - B
+      
   schedule:
-  - cron: '* * * * *'
+  - cron: '*/5 * * * *'
   
 jobs:
   job1:
