@@ -1,0 +1,13 @@
+name: schedule
+on: 
+  schedule:
+  - cron: '* * * * *'
+  
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Schedule job every 10 sec
+        run: date
+    
+  
