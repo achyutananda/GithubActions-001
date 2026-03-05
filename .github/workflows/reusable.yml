@@ -1,0 +1,35 @@
+name: Reusable
+on:
+  workflow_call:
+    inputs:
+      input1:
+        type: string
+        description: 'Input 1'
+        required: true
+    secrets:
+      secret1:
+        description: 'secret 1'
+        required: true
+    outputs:
+      build_id:
+        description: 'Pass build id'
+        value: ${{ jobs.build.output.build_id }}
+jobs:
+  job1:
+    runs-on: ubuntu-latest
+    outputs:
+      build_id: ${{steps.set_id.outputs.build_id}}
+    steps:
+      - name: Use inputs
+        run: |
+          echo "Environment: ${{ inputs.environment }}"
+          echo "Version:     ${{ inputs.version }}"
+
+      - name: Use secrets
+        run: |
+          echo "Deploying with API key..."
+          echo "${{ secrets.API_KEY }}"   # never print real secrets!
+
+      - name: Generate build ID
+        id: set_id
+        run: echo "build_id=build-$(date +%s)" >> $GITHUB_OUTPUT
