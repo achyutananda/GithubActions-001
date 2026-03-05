@@ -12,7 +12,7 @@ jobs:
       - name: Setup java
         uses: actions/setup-java@v4
         with:
-          version: ${{matrix.java}}
+          java-version: ${{matrix.java}}
           distribution: temurin
       - run: echo ${{matrix.os}} ${{matrix.java}}
       
