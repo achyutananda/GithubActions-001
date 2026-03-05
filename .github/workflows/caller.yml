@@ -1,0 +1,21 @@
+name: Caller Workflow
+
+on:
+  workflow_dispatch: 
+jobs:
+  call-reusable:
+    uses: './.github/workflows/reusable.yml'  # path to reusable workflow
+
+    with:
+      input1: 'production'
+
+    secrets:
+      secret1: ${{ 'ABC' }}        # pass from caller's secrets
+
+  use-output:
+    runs-on: ubuntu-latest
+    needs: call-reusable   # wait for reusable workflow to finish
+
+    steps:
+      - name: Use output from reusable workflow
+        run: echo "Build ID is ${{ needs.call-reusable.outputs.build_id }}"
