@@ -8,7 +8,7 @@ jobs:
     with:
       input1: 'production'
     secrets:
-      secret1: ${{ secrets.GITHUB_TOKEN }}        # pass from caller's secrets
+      secret1: ${{ secrets.MY_UAT_SECRET }}        # pass from caller's secrets
 
   use-output:
     runs-on: ubuntu-latest
