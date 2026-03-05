@@ -18,6 +18,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Schedule job every 10 sec
-        run: date
+        run: |
+          date
+          echo Data is ${{inputs.data}}
     
   
