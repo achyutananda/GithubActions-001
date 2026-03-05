@@ -13,7 +13,7 @@ on:
     outputs:
       build_id:
         description: 'Pass build id'
-        value: ${{ jobs.build.output.build_id }}
+        value: ${{ jobs.build.outputs.build_id }}
 jobs:
   job1:
     runs-on: ubuntu-latest
@@ -22,13 +22,12 @@ jobs:
     steps:
       - name: Use inputs
         run: |
-          echo "Environment: ${{ inputs.environment }}"
-          echo "Version:     ${{ inputs.version }}"
+          echo "Environment: ${{ inputs.input1 }}"
 
       - name: Use secrets
         run: |
           echo "Deploying with API key..."
-          echo "${{ secrets.API_KEY }}"   # never print real secrets!
+          echo "${{ secrets.secret1 }}"   # never print real secrets!
 
       - name: Generate build ID
         id: set_id
